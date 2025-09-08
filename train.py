@@ -59,7 +59,7 @@ training_args = TrainingArguments(
     learning_rate=2e-4,
     num_train_epochs=3,
     logging_steps=100,
-    save_steps=500,
+    save_steps=2000,
     remove_unused_columns=False
 )
 
