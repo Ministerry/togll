@@ -17,10 +17,10 @@ print("模型加载完成!")
 test_path ="../dataset/test.json"
 with open(test_path, 'r', encoding='utf-8') as f:
     test_data = json.loads(f.read())
-answer_path ="../dataset/answer.json"
 wrong = 0
+evaluate = []
 #将文本编码为模型输入
-for i in range(10):
+for i in range(len(test_data)):
     inputs = tokenizer(test_data[i]["conversation"][0]["content"], return_tensors="pt", padding=True)
     input_len = inputs["input_ids"].shape[1]
     #推送至Gpu
@@ -42,10 +42,17 @@ for i in range(10):
     #打印结果
     predict = "".join(generated_texts[input_len:]).strip()
     text = re.search(r'\{(.+?)\}', predict)
-    if({text.group(1)} != test_data[i]["conversation"][1]["content"]) :
+    if(text.group(1) != test_data[i]["conversation"][1]["content"]) :
         wrong = wrong + 1
-    print("当前位置：",i)
-    print("当前错误率:",wrong / i)
+    evaluate.append({"predict":text.group(1),"answer:":test_data[i]["conversation"][1]["content"]})
+    print(f"predict[{i}]:{text.group(1)}")
+    print(f"answer[{i}]:",test_data[i]["conversation"][1]["content"])
+
+
 
 print("模型错误率为：",wrong / len(test_data))
 print("正确率为:",1 - wrong / len(test_data))
+#
+
+with open("../dataset/evaluate.json","w",encoding="utf-8") as f :
+    json.dump(evaluate, f, ensure_ascii=False, indent=4)
