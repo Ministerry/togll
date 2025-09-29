@@ -52,7 +52,6 @@ for i in range(len(test_data)):
 
 print("模型错误率为：",wrong / len(test_data))
 print("正确率为:",1 - wrong / len(test_data))
-#
 
 with open("../dataset/evaluate.json","w",encoding="utf-8") as f :
     json.dump(evaluate, f, ensure_ascii=False, indent=4)
